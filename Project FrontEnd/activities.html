@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Activities</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css"> <!-- Link to custom CSS -->
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Extracurriculars</a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">Home</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="activities.html">Activities</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="about.html">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="contact.html">Contact</a>
+                </li>
+                <li class="nav-item" id="logout-item" style="display: none;">
+                    <a class="nav-link" href="#" id="logout-button">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Available Activities</h1>
+        <div class="row" id="activity-dashboard">
+            <!-- Activity cards will be populated here -->
+        </div>
+
+        <!-- Section to display registered activities -->
+        <div class="mt-5">
+            <h2 class="text-center">Your Registered Activities</h2>
+            <ul class="list-group" id="registered-activities-list">
+                <!-- Registered activities will be displayed here -->
+            </ul>
+        </div>
+    </div>
+
+    <footer class="text-center mt-5">
+        <p>&copy; 2024 Student Extracurriculars</p>
+    </footer>
+
+    <script>
+        // Updated activities data with instructors
+        const activities = [
+            { id: 1, name: "Football", date: "October 10, 2024", time: "3:00 PM", instructor: "Coach Venu" },
+            { id: 2, name: "Guitar Club", date: "October 12, 2024", time: "6:00 PM", instructor: "Vicky" },
+            { id: 3, name: "Art Club", date: "October 14, 2024", time: "2:00 PM", instructor: "Mr.Chanikya" },
+            { id: 4, name: "Drama", date: "October 17, 2024", time: "4:00 PM", instructor: "Ms.Sara" },
+            { id: 5, name: "Science Club", date: "October 19, 2024", time: "5:00 PM", instructor: "Rahul" },
+            { id: 6, name: "Basketball", date: "October 21, 2024", time: "3:00 PM", instructor: "Coach Madhu" }
+        ];
+
+        // Function to populate activity dashboard with activities and instructors
+        function populateActivityDashboard() {
+            const dashboard = document.getElementById("activity-dashboard");
+            activities.forEach(activity => {
+                const card = document.createElement("div");
+                card.classList.add("col-md-4", "mb-4");
+                card.innerHTML = `
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">${activity.name}</h5>
+                            <p class="card-text">Date: ${activity.date}</p>
+                            <p class="card-text">Time: ${activity.time}</p>
+                            <p class="card-text"><strong>Instructor:</strong> ${activity.instructor}</p>
+                            <button class="btn btn-primary enroll-button" data-id="${activity.id}">Enroll</button>
+                        </div>
+                    </div>
+                `;
+                dashboard.appendChild(card);
+            });
+        }
+
+        // Function to get activity name by ID
+        function getActivityName(activityId) {
+            const activity = activities.find(a => a.id == activityId);
+            return activity ? activity.name : 'Unknown';
+        }
+
+        // Handle enroll button click
+        document.addEventListener("click", function(e) {
+            if (e.target.classList.contains("enroll-button")) {
+                const activityId = e.target.getAttribute("data-id");
+                const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+                if (!loggedInUser) {
+                    alert("You must be logged in to enroll in an activity.");
+                    return;
+                }
+
+                // Enroll the user
+                alert(`You have successfully enrolled in the activity!`);
+                let enrollments = JSON.parse(localStorage.getItem('enrollments')) || [];
+                enrollments.push({ student: loggedInUser.name, email: loggedInUser.email, activityId: activityId });
+                localStorage.setItem('enrollments', JSON.stringify(enrollments));
+
+                // Update registered activities list
+                populateRegisteredActivities();
+            }
+        });
+
+        // Function to populate registered activities list
+        function populateRegisteredActivities() {
+            const registeredList = document.getElementById("registered-activities-list");
+            registeredList.innerHTML = ""; // Clear the list
+            const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+            const enrollments = JSON.parse(localStorage.getItem('enrollments')) || [];
+            
+            // Filter enrollments for the current logged-in user
+            const userEnrollments = enrollments.filter(enrollment => enrollment.email === loggedInUser.email);
+
+            if (userEnrollments.length === 0) {
+                registeredList.innerHTML = `<li class="list-group-item">You have not registered for any activities yet.</li>`;
+                return;
+            }
+
+            // Populate the registered activities
+            userEnrollments.forEach(enrollment => {
+                const activityName = getActivityName(enrollment.activityId);
+                const listItem = document.createElement("li");
+                listItem.classList.add("list-group-item");
+                listItem.textContent = activityName;
+                registeredList.appendChild(listItem);
+            });
+        }
+
+        // Check if user is logged in
+        window.onload = function() {
+            const loggedInUser = localStorage.getItem("loggedInUser");
+            if (loggedInUser) {
+                document.getElementById("logout-item").style.display = "block"; // Show logout button
+            } else {
+                alert("You are not logged in. Redirecting to login page.");
+                window.location.href = "login.html"; // Redirect to login if not logged in
+            }
+            populateActivityDashboard();
+            populateRegisteredActivities();
+        };
+
+        // Handle logout
+        document.getElementById("logout-button").addEventListener("click", function(e) {
+            e.preventDefault();
+            localStorage.removeItem("loggedInUser"); // Remove user from local storage
+            alert("You have been logged out.");
+            window.location.href = "login.html"; // Redirect to login page
+        });
+    </script>
+</body>
+</html>

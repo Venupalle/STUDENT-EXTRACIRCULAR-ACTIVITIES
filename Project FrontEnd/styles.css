@@ -1,0 +1,95 @@
+body {
+    background-color: #e7f0f9; /* Light Blue fallback */
+    background-image: url('background.jpg'); /* Add your background image */
+    background-size: cover; /* Make the background image cover the entire background */
+    background-position: center; /* Center the background image */
+    background-attachment: fixed; /* Keeps the background fixed while scrolling */
+    background-repeat: no-repeat; /* Prevent the image from repeating */
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    color: #2c3e50; /* Text color (Dark Slate Gray) */
+}
+
+h1 {
+    color: #2c3e50; /* Dark Slate Gray */
+    margin-bottom: 20px;
+    font-size: 2.5rem;
+    text-align: center;
+}
+
+.navbar {
+    margin-bottom: 30px;
+    background-color: #343a40; /* Dark gray */
+}
+
+.navbar-brand {
+    font-weight: bold;
+}
+
+.nav-link {
+    font-weight: 500;
+}
+
+.nav-link:hover {
+    text-decoration: underline;
+}
+
+footer {
+    background-color: #343a40; /* Dark gray */
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+}
+
+.container {
+    max-width: 900px;
+    margin: auto;
+    padding: 15px;
+}
+
+.list-group {
+    border: none;
+}
+
+.list-group-item {
+    border: 1px solid #e2e2e2;
+    border-radius: 5px;
+    font-size: 1.2rem;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.list-group-item:hover {
+    background-color: #007bff; /* Bootstrap primary */
+    color: white;
+    transform: scale(1.02);
+}
+
+.form-control {
+    border-radius: 5px;
+    border: 1px solid #ced4da;
+    transition: border-color 0.3s;
+}
+
+.form-control:focus {
+    border-color: #007bff; /* Bootstrap primary */
+    box-shadow: 0 0 5px rgba(0, 123, 255, .5);
+}
+
+.btn-primary {
+    background-color: #007bff; /* Bootstrap primary */
+    border-color: #007bff; /* Bootstrap primary */
+    border-radius: 5px;
+    padding: 10px 20px;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+    box-shadow: 0 0 5px rgba(0, 86, 179, .5);
+}
+
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2rem;
+    }
+}

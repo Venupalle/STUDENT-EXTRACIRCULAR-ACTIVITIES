@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin View - Enrollments</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css"> <!-- Link to custom CSS -->
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Extracurriculars</a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                    <a class="nav-link" href="admin-enrollments.html">Admin Enrollments</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="activities.html">Activities</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="about.html">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="contact.html">Contact</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" id="logout-button">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <h1>Enrolled Students</h1>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Student Email</th>
+                    <th>Activity</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="enrollment-table-body">
+                <!-- Enrolled student details will be populated here -->
+            </tbody>
+        </table>
+
+        <h2>Add Activity</h2>
+        <form id="add-activity-form">
+            <div class="form-group">
+                <label for="activity-name">Activity Name:</label>
+                <input type="text" class="form-control" id="activity-name" required>
+            </div>
+            <div class="form-group">
+                <label for="event-date">Event Date:</label>
+                <input type="date" class="form-control" id="event-date" required>
+            </div>
+            <div class="form-group">
+                <label for="event-time">Event Time:</label>
+                <input type="time" class="form-control" id="event-time" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Add Activity</button>
+        </form>
+    </div>
+
+    <footer class="text-center mt-5">
+        <p>&copy; 2024 Student Extracurriculars</p>
+    </footer>
+
+    <script>
+        // Simulated enrolled data for demonstration purposes
+        let enrollments = JSON.parse(localStorage.getItem('enrollments')) || [];
+        let activities = []; // Store added activities
+
+        // Function to populate the enrollment table
+        function populateEnrollmentTable() {
+            const tableBody = document.getElementById("enrollment-table-body");
+            tableBody.innerHTML = ""; // Clear existing rows
+            enrollments.forEach((enrollment) => {
+                const row = document.createElement("tr");
+                const activityName = getActivityName(enrollment.activityId); // Get activity name
+                row.innerHTML = `
+                    <td>${enrollment.student}</td>
+                    <td>${activityName}</td>
+                    <td><button class="btn btn-danger delete-button" data-email="${enrollment.student}" data-activity-id="${enrollment.activityId}">Delete</button></td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Function to get activity name by ID
+        function getActivityName(activityId) {
+            const activity = activities.find(act => act.id == activityId);
+            return activity ? activity.name : "Unknown Activity";
+        }
+
+        // Handle add activity form submission
+        document.getElementById("add-activity-form").addEventListener("submit", function(e) {
+            e.preventDefault(); // Prevent default form submission
+            const activityName = document.getElementById("activity-name").value;
+            const eventDate = document.getElementById("event-date").value;
+            const eventTime = document.getElementById("event-time").value;
+
+            // Add new activity to the activities array
+            const newActivity = {
+                id: activities.length + 1,
+                name: activityName,
+                date: eventDate,
+                time: eventTime
+            };
+            activities.push(newActivity);
+            alert(`Activity "${activityName}" added successfully!`);
+            populateEnrollmentTable(); // Update the table
+            document.getElementById("add-activity-form").reset(); // Reset form fields
+        });
+
+        // Handle delete button click
+        document.addEventListener("click", function(e) {
+            if (e.target.classList.contains("delete-button")) {
+                const email = e.target.getAttribute("data-email");
+                const activityId = e.target.getAttribute("data-activity-id");
+                enrollments = enrollments.filter(enrollment => !(enrollment.student === email && enrollment.activityId == activityId));
+                localStorage.setItem('enrollments', JSON.stringify(enrollments)); // Update local storage
+                alert("Enrollment deleted successfully.");
+                populateEnrollmentTable(); // Refresh the table
+            }
+        });
+
+        // Handle logout button click
+        document.getElementById("logout-button").addEventListener("click", function() {
+            // Clear user session (local storage or session storage)
+            localStorage.removeItem('currentUser'); // Adjust this to match your storage key
+            localStorage.removeItem('enrollments'); // Optional, clear enrollments if needed
+
+            // Redirect to login page
+            window.location.href = "login.html"; // Redirect to your login page
+        });
+
+        // Initial population of the enrollment table
+        populateEnrollmentTable();
+    </script>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Student Extracurricular Activities</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css"> <!-- Link to custom CSS -->
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Extracurriculars</a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="signup.html">Signup</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="login.html">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="forgot-password.html">Forgot Password</a>
+                </li>
+                <li class="nav-item" id="logout-item" style="display: none;">
+                    <a class="nav-link" href="#" id="logout-button">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <h1 class="text-center">Login</h1>
+        <form id="login-form">
+            <div class="form-group">
+                <label for="loginEmail">Email address</label>
+                <input type="email" class="form-control" id="loginEmail" placeholder="Enter your email" required>
+            </div>
+            <div class="form-group">
+                <label for="loginPassword">Password</label>
+                <input type="password" class="form-control" id="loginPassword" placeholder="Password" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+    </div>
+
+    <footer class="text-center mt-5">
+        <p>&copy; 2024 Student Extracurriculars</p>
+    </footer>
+
+    <script>
+        // Handle login form submission
+        document.getElementById("login-form").addEventListener("submit", function(e) {
+            e.preventDefault(); // Prevent default form submission
+            
+            const email = document.getElementById("loginEmail").value;
+            const password = document.getElementById("loginPassword").value;
+            let users = JSON.parse(localStorage.getItem('users')) || [];
+            const user = users.find(u => u.email === email && u.password === password);
+
+            if (user) {
+                alert("Login successful!");
+                localStorage.setItem("loggedInUser", JSON.stringify(user)); // Save user to local storage
+                window.location.href = "activities.html"; // Redirect to activities page
+            } else {
+                alert("Invalid email or password. Please try again.");
+            }
+        });
+
+        // Check if user is logged in
+        window.onload = function() {
+            const loggedInUser = localStorage.getItem("loggedInUser");
+            if (loggedInUser) {
+                document.getElementById("logout-item").style.display = "block"; // Show logout button
+            }
+        };
+
+        // Handle logout
+        document.getElementById("logout-button").addEventListener("click", function(e) {
+            e.preventDefault();
+            localStorage.removeItem("loggedInUser"); // Remove user from local storage
+            alert("You have been logged out.");
+            window.location.href = "login.html"; // Redirect to login page
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin View - Feedback</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css"> <!-- Link to custom CSS -->
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="#">Extracurriculars</a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="admin-enrollments.html">Admin Enrollments</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="activities.html">Activities</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="admin-feedback.html">Feedback</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <h1>Activity Feedback</h1>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Activity</th>
+                    <th>Student Feedback</th>
+                    <th>Rating</th>
+                </tr>
+            </thead>
+            <tbody id="feedback-table-body">
+                <!-- Feedback data will be populated here -->
+            </tbody>
+        </table>
+    </div>
+
+    <footer class="text-center mt-5">
+        <p>&copy; 2024 Student Extracurriculars</p>
+    </footer>
+
+    <script>
+        // Simulated feedback data (replace with data fetched from the backend)
+        const feedbackData = [
+            { activityId: 1, activityName: 'Basketball Tournament', feedback: 'It was fun and well-organized.', rating: 4 },
+            { activityId: 2, activityName: 'Science Fair', feedback: 'Great experience, learned a lot.', rating: 5 },
+            { activityId: 3, activityName: 'Debate Club', feedback: 'Very engaging and thought-provoking.', rating: 4 }
+        ];
+
+        // Function to populate feedback table
+        function populateFeedbackTable() {
+            const tableBody = document.getElementById('feedback-table-body');
+            tableBody.innerHTML = ''; // Clear existing rows
+
+            feedbackData.forEach((feedbackEntry) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${feedbackEntry.activityName}</td>
+                    <td>${feedbackEntry.feedback}</td>
+                    <td>${feedbackEntry.rating}/5</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        // Initial population of the feedback table
+        populateFeedbackTable();
+    </script>
+</body>
+</html>
